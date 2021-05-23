@@ -5,6 +5,7 @@ import { RocketOutlined } from '@ant-design/icons';
 import ImageSlider from '../../utils/ImageSlider';
 import CheckBox from './Sections/CheckBox';
 import RadioBox from './Sections/RadioBox';
+import SearchFeature from './Sections/SearchFeature';
 import { continents, price } from './Sections/Datas';
 
 const { Meta } = Card;
@@ -19,6 +20,7 @@ function LandingPage() {
         continents: [],
         price: []
     })
+    const [SearchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
 
@@ -98,6 +100,20 @@ function LandingPage() {
         showFilteredResults(newFilters);
         setFilters(newFilters);
     }
+
+    const updateSearchTerm = (newSearchTerm) => {
+        setSearchTerm(newSearchTerm);
+
+        let body = {
+            skip: 0,
+            limit: Limit,
+            filters: Filters,
+            searchTerm: SearchTerm
+        }
+
+        setSkip(0);
+        getProducts(body)
+    }
     
     return (
         <div style={{ width: '75%', margin: '3rem auto' }}>
@@ -106,7 +122,6 @@ function LandingPage() {
             </div>
 
             {/* Filter */}
-
             <Row gutter={[16,16]}>
                 <Col lg={12} xs={24}>
                     {/* CheckBox */}
@@ -119,6 +134,11 @@ function LandingPage() {
             </Row>
 
             {/* Search */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '1rem auto' }}>
+                <SearchFeature 
+                    refreshFunction={updateSearchTerm}
+                />
+            </div>
 
             {/* Cards */}
             <Row gutter={16, 16}>
