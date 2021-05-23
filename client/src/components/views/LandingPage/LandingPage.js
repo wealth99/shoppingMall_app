@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Col, Card, Row } from 'antd'; 
 import { RocketOutlined } from '@ant-design/icons';
@@ -58,7 +58,7 @@ function LandingPage() {
 
     const renderCards = Products.map((product, index) => {
         return <Col key={index} lg={6} md={8} xs={24} style={{ marginBottom: 16 }}>
-                <Card cover={<ImageSlider images={product.images}/>} >
+                <Card cover={<a href={`/product/${product._id}`}><ImageSlider images={product.images}/></a>} >
                     <Meta title={product.title} description={`$${product.price}`} />
                 </Card>
             </Col>
