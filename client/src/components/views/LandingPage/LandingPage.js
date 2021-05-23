@@ -108,7 +108,7 @@ function LandingPage() {
             skip: 0,
             limit: Limit,
             filters: Filters,
-            searchTerm: SearchTerm
+            searchTerm: newSearchTerm
         }
 
         setSkip(0);
@@ -157,4 +157,4 @@ function LandingPage() {
     )
 }
 
-export default LandingPage
+export default LandingPage;

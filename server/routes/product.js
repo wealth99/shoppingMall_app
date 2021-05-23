@@ -43,11 +43,18 @@ router.post('/', (req, res) => {
     
 });
 
+function isNumeric(s) {
+    if (typeof s !== 'string') return false;
+    return !isNaN(s) && !isNaN(parseFloat(s));
+}
+
 router.post('/products', (req, res) => {
     // produdct collection에 들어 있는 모든 상품 정보를 가져오기
 
     let limit = req.body.limit ? parseInt(req.body.limit) : 20;
     let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+    let term = req.body.searchTerm;
+
     let findArgs = {};
 
     for(let key in req.body.filters) {
@@ -66,9 +73,10 @@ router.post('/products', (req, res) => {
         }
     }
 
-    console.log('findArgs: ', findArgs);
-
-    Product.find(findArgs)
+    if(term) {
+        const findRegex = new RegExp(term);
+        Product.find(findArgs)
+        .find( { $or: [{ title: findRegex }, { description: findRegex }, { price: isNumeric(term) ? Number(term) : null }] })
         .populate('writer')
         .skip(skip)
         .limit(limit)
@@ -76,6 +84,16 @@ router.post('/products', (req, res) => {
             if(err) return res.status(400).json({ success: false, err});
             return res.status(200).json({ success: true, productsInfo, postSize: productsInfo.length });
         })
+    } else {
+        Product.find(findArgs)
+        .populate('writer')
+        .skip(skip)
+        .limit(limit)
+        .exec((err, productsInfo) => {
+            if(err) return res.status(400).json({ success: false, err});
+            return res.status(200).json({ success: true, productsInfo, postSize: productsInfo.length });
+        })
+    }
 });
 
 module.exports = router;
